@@ -1,0 +1,33 @@
+name: Deploy Server
+
+on:
+  push:
+    branches:
+      - master  
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4  
+
+      - name: Deploy to mishor.app.xoftics.com
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SERVER_IP }}  
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.CPANEL_SSH_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          port: 21098
+          script: |
+            # Add the server's SSH key to known_hosts to avoid verification errors
+            mkdir -p ~/.ssh
+            ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+
+            # Navigate to the project directory
+            cd /home/xoftkfnz/mishor.app.xoftics.com
+
+            # Pull the latest changes from the repository
+            git pull origin master
