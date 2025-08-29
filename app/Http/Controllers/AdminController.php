@@ -11,6 +11,8 @@ use App\Models\Client;
 use App\Models\Template;
 use App\Models\Assessment;
 use App\Models\User;
+
+//admin
 class AdminController extends Controller
 {
 
